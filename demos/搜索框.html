@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>搜索框</title>
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<style type="text/css">
+			.search {
+				width: 500px;
+				margin: 200px auto;
+			}
+			.search input {
+				width: 462px;
+				border: 1px solid #ccc;
+				height: 36px;
+				line-height: 36px;
+				font-size: 24px;
+				background: url(../img/icon-search-black.png)  no-repeat 10px center;
+				padding-left: 36px;
+			}
+			#searchUl {
+				display: none;
+			}
+			ul {
+				border: 1px solid #ccc;
+			}
+			li {
+				height: 24px;
+				line-height: 24px;
+				font-size: 16px;
+			}
+			li:hover {
+				background-color: #ccc;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="search">
+			<input type="text" name="search" id="search" value="" />
+			<div id="searchUl"></div>
+		</div>
+		
+		
+	<script type="text/javascript">
+		var arr=["a","ab","dafsfsa","rieroweruj","qwekasnba","abbababsuuu","abcdeeeeee","baracbabcd"];
+		
+		var search=document.getElementsByClassName("search")[0];
+		var searchInput=document.getElementById("search");
+		var searchUl=document.getElementById("searchUl");
+		//搜索框获得焦点是显示搜索区域
+		searchInput.onfocus=function(){
+			searchUl.style.display="block";
+			
+			searchInput.oninput=function(){
+				//判断ul是否存在，如果存在则删除
+				var ulLength=searchUl.getElementsByTagName("ul");
+				if(ulLength.length!==0){
+					searchUl.removeChild(ulLength[0]);
+				}
+				//ul不存在，创建一个ul元素
+				var ul=document.createElement("ul");
+				//对数据库中的属于与输入内容进行匹配，匹配成功则包裹li并添加到字符中
+				var str="";
+				for(i=0;i<arr.length;i++){
+					if(arr[i].match(searchInput.value)){
+						str+="<li>"+arr[i]+"</li>"
+					}
+				}
+				//将字符串内容添加到ul中
+				ul.innerHTML=str;
+				//如果搜索框内容为空则截断函数
+				if(searchInput.value===""){
+					return;
+				}
+				//将ul添加到搜索域
+				searchUl.appendChild(ul);
+				
+				//选中li中内容自动赋值到搜索框内
+				var ulArr=searchUl.getElementsByTagName("li");
+				for(i=0;i<ulArr.length;i++){
+					ulArr[i].onmouseover=function(){
+						searchInput.value=this.innerHTML;
+					}
+				}
+			}
+		}
+		//搜索框获得焦点是隐藏搜索区域
+		searchInput.onblur=function(){
+			searchUl.style.display="none";
+		}
+			
+		
+	</script>	
+	</body>
+</html>
