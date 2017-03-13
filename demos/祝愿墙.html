@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>祝愿墙</title>
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<style>
+			body {
+				margin: 0 auto;
+				font-size: 12px;
+				background: url(../images/bg.gif) repeat center 36px;
+				text-align: center;
+				background-color: #c30230;;
+			}
+			
+			#content {
+				margin: 0 auto;
+				width: 960px;
+				background: url(../images/content_bg.jpg) no-repeat left top;
+				height: 627px;
+				position: relative;
+			}
+			
+			#content .tip {
+				position: absolute;
+				width: 227px;
+			}
+			
+			#content .tip .tip_h {
+				background: url(../images/tip1_h.gif) no-repeat left top;
+				width: 227px;
+				height: 23px;
+				padding-top: 45px;
+				text-align: left;
+				cursor: move;
+			}
+			
+			#content .tip .tip_c {
+				background: url(../images/tip1_c.gif) repeat-y;
+				width: 200px;
+				min-height: 40px;
+				max-height: 160px;
+				padding-left: 12px;
+				padding-right: 15px;
+				text-align: left;
+				word-wrap: break-word;
+				word-break: break-all;
+				overflow: hidden;
+			}
+			
+			#content .tip .tip_f {
+				background: url(../images/tip1_f.gif) no-repeat left top;
+				width: 227px;
+				height: 53px;
+				padding-top: 20px;
+			}
+			
+			#content .num {
+				width: 195px;
+				float: left;
+				padding-left: 7px;
+			}
+			
+			#content .close {
+				float: left;
+				color: #000;
+				cursor: pointer;
+				font-size: 12px;
+			}
+			
+			#content .icon {
+				float: left;
+				width: 50px;
+				height: 35px;
+				background: url(../images/bpic_1.gif) no-repeat 15px center;
+			}
+			
+			#content .name {
+				float: right;
+				padding-right: 15px;
+				text-align: right;
+				font-size: 14px;
+				line-height: 35px;
+				color: #C0F;
+			}
+		</style>
+	</head>
+	<body>
+		<!--纸条墙-->
+		<div id="content">
+			<!--纸条-->
+			<div id="tip1" class="tip">
+				
+			</div>
+		</div>
+		
+		
+	<script>
+		var messages = [
+            {"id":1,"name":"mahu","content":"今天你拿苹果支付了么","time":"2016-02-17 00:00:00"},
+            {"id":2,"name":"haha","content":"今天天气不错，风和日丽的","time":"2016-02-18 12:40:00"},
+            {"id":3,"name":"jjjj","content":"常要说的事儿是乐生于苦","time":"2016-03-18 12:40:00"},
+            {"id":4,"name":"9.8的妹纸","content":"把朋友家厕所拉堵了 不敢出去 掏了半小时了都","time":"2016-03-18 12:40:00"},
+            {"id":5,"name":"雷锋ii.","content":"元宵节快乐","time":"2016-02-22 12:40:00"},
+            {"id":6,"name":"哎呦哥哥.","content":"据说今晚央视的元宵晚会导演和春晚导演是同一个人，真是躲得过初一，躲不过十五。","time":"2016-02-22 01:30:00"},
+            {"id":7,"name":"没猴哥，不春晚","content":"班主任:“小明，你都十二岁了，还是三年级，不觉得羞愧吗”？。小明:“一点也不觉得，老师你都四十多岁了，不也是年年在三年级混日子吗？羞愧的应该是你”。老师:……","time":"2016-02-22 01:30:00"},
+            {"id":8,"name":"哎呦杰杰.","content":"真搞不懂你们地球人，月亮有什么好看的，全是坑，还是对面那哥们好看，","time":"2016-02-22 01:30:00"},
+            {"id":9,"name":"哎呦哎呦","content":"今天哪里的烟花最好看！！？答：朋友圈。。。","time":"2016-02-22 02:30:00"}
+        ];
+		//      获取祝愿墙
+        var content = document.getElementById("content");
+		//      循环创建tip
+        for(i=0;i<messages.length;i++){
+        	// 创建tip，并绑定id和class，id唯一，在后边加上数据库中的主键
+        	var tip=document.createElement("div");
+        	tip.id="tip"+messages[i].id;
+        	tip.className="tip";
+        	//  随机产生left和top，并赋值给tip
+        	var leftValue=Math.random()*700;
+        	var topValue=Math.random()*400;
+        	tip.style.left=leftValue+"px";
+        	tip.style.top=topValue+"px";
+        	//  绑定tip内容的html，html为事先画好的样式，将可变数据用数据库中数据替换
+        	tip.innerHTML='<div class="tip_h clearfix">'+
+										'<div class="num">第['+messages[i].id+']条 '+messages[i].time+'</div>'+
+										'<div class="close" title="关闭纸条">×</div>'+
+									'</div>'+
+									'<div class="tip_c">'+
+										messages[i].content+
+									'</div>'+
+									'<div class="tip_f clearfix">'+
+										'<div class="icon"></div>'+
+										'<div class="name">'+messages[i].name+'</div>'+
+									'</div>';
+			//  将创建好的tip添加到祝愿墙中
+			content.appendChild(tip);
+			
+			//  点击×删除tip
+			var close=tip.getElementsByClassName("close")[0];
+			close.onclick=function(){
+				content.removeChild(this.parentNode.parentNode);
+			}
+			
+			//  双击顶部删除tip
+			var tip_h=tip.getElementsByClassName("tip_h")[0];
+			tip_h.ondblclick=function(){
+				content.removeChild(this.parentNode);
+			}
+			
+			//      点击tip显示在最上边
+			tip.onclick=fn;
+			var index=1;
+			function fn(){
+				this.style.zIndex=index;
+				index++;
+			}
+        }
+        
+        
+		
+		
+			
+	</script>
+	</body>
+</html>
