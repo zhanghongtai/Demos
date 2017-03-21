@@ -159,8 +159,10 @@
 			tip_h.onmousedown=function(event){
 				event=event || window.event;
 				//获取鼠标在盒子中的坐标
-				var pagex = event.pageX || scroll().left + event.clientX;
-				var pagey = event.pageY || scroll().top + event.clientY;
+				var scrollx=window.pageXOffset || document.body.scrollLeft || document.documentElement.scrollLeft;
+				var scrolly=window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+				var pagex = event.pageX || scrollx + event.clientX;
+				var pagey = event.pageY || scrolly + event.clientY;
 				var x = pagex - this.parentNode.offsetLeft;
 				var y = pagey - this.parentNode.offsetTop;
 				
@@ -169,8 +171,8 @@
 				
 				document.onmousemove = function(event){
 					event=event || window.event;
-					var xx = event.pageX || scroll().left + event.clientX;
-					var yy = event.pageY || scroll().top + event.clientY;
+					var xx = event.pageX || scrollx + event.clientX;
+					var yy = event.pageY || scrolly + event.clientY;
 					xx = xx - x;
 					yy = yy - y;
 					
@@ -184,27 +186,6 @@
 			tip_h.onmouseup = function(){
 				document.onmousemove = null;
 			}
-			
-			// 封装scroll方法，解决浏览器兼容问题
-			function scroll() {  
-			    if(window.pageYOffset != null) {  // ie9+ 高版本浏览器
-			        // 因为 window.pageYOffset 默认的是  0  所以这里需要判断
-			        return {
-			            left: window.pageXOffset,
-			            top: window.pageYOffset
-			        }
-			    }else if(document.compatMode === "CSS1Compat") {    // 标准浏览器   来判断有没有声明DTD
-			        return {
-			            left: document.documentElement.scrollLeft,
-			            top: document.documentElement.scrollTop
-			        }
-			    }
-			    return {   // 未声明 DTD
-			        left: document.body.scrollLeft,
-			        top: document.body.scrollTop
-			    }
-			}
-			
        }
 	</script>
 	</body>
