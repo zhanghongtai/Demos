@@ -6,11 +6,25 @@
 		<link rel="stylesheet" type="text/css" href="css/base.css"/>
 	</head>
 	<body>
+		<div style="height: 30px;width: 30px; position: absolute; ">
+			
+		</div><br /><br />
+		<button>200</button><br />
+		<button>400</button>
 		
 		
 		
 		
-		
-    <script src="js/base.js"></script>
+    <script type="text/javascript" src="js/tool.js" ></script>
+    <script>
+    	var div=document.getElementsByTagName("div")[0];
+    	var button=document.getElementsByTagName("button");
+    	button[0].onclick=function(){
+    		animate_uniform(div,200,1);
+    	}
+    	button[1].onclick=function(){
+    		animate_uniform(div,400,1);
+    	}
+    </script>
 	</body>
 </html>
