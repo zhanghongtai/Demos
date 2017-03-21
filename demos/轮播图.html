@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>伊布家族轮播图</title>
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<style>
+			.box {
+				width: 1000px;
+				height: 300px;
+				padding: 5px;
+				border: 1px solid #ccc;
+				margin: 100px auto;
+			}
+			.inner {
+				width: 1000px;
+				height: 300px;
+				position: relative;
+				overflow: hidden;
+			}
+			.inner ul {
+				position: absolute;
+				left: 0;
+			}
+			.inner ul li {
+				float: left;
+				width: 1000px;
+				height: 300px;
+				text-align: center;
+				overflow: hidden;
+			}
+			.inner ol {
+				position: absolute;
+				right: 10px;
+				bottom: 10px;
+				text-align: center;
+				line-height: 20px;
+			}
+			.inner ol li {
+				float: left;
+				width: 20px;
+				height: 20px;
+				border: 1px solid #CCCCCC;
+				background-color: #FFFFFF;
+				cursor: pointer;
+				margin-left: 5px;
+			}
+			.name {
+				width: 200px;
+				height: 40px;
+				position: absolute;
+				left: 30px;
+				font: 700 36px/40px "arial black";
+				color: indigo;
+			}
+			.current {
+				background-color: darkorange !important;
+				color: #fff;
+			}
+			.btn {
+				position: absolute;
+				top: 50px;
+				background: #CCCCCC;
+				width: 20px;
+				height: 70px;
+				line-height: 70px;
+				text-align: center;
+				opacity: 0.8;
+				cursor: pointer;
+				display: none;
+			}
+			.left {
+				left: 10px;
+			}
+			.right {
+				right: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box" id="box">
+			<div class="inner">
+				<ul></ul>
+				<ol></ol>
+				<div class="name"><span></span></div>
+				<div class="btn left"><</div>
+				<div class="btn right">></div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="../js/tool.js" ></script>
+		<script>
+			//需求：
+			//1：动态生成轮播图
+			//2：鼠标点击下面的索引标签时切换图片
+			//3：鼠标放到图片上时显示左右切换按钮，点击按钮进行左右切换，同时下方索引跟着变化
+			//4：自动轮播图
+			//5：鼠标放到图片上清除定时器
+			var images=[
+				{"name":"伊布家族","url":"../images/everyone.jpg"},
+				{"name":"伊布","url":"../images/yibu.jpg"},
+				{"name":"火伊布","url":"../images/huo.jpg"},
+				{"name":"水伊布","url":"../images/shui.jpg"},
+				{"name":"雷伊布","url":"../images/lei.jpg"},
+				{"name":"太阳伊布","url":"../images/ri.jpg"},
+				{"name":"月伊布","url":"../images/yue.jpg"},
+				{"name":"叶伊布","url":"../images/ye.jpg"},
+				{"name":"冰伊布","url":"../images/bing.jpg"},
+				{"name":"仙伊布","url":"../images/xian.jpg"}
+			];
+			var box=document.getElementById("box");
+			var inner=box.getElementsByClassName("inner")[0];
+			var ul=inner.getElementsByTagName("ul")[0];
+			var ol=inner.getElementsByTagName("ol")[0];
+			var nameSpan=inner.children[2].children[0];
+			var btnLeftRight = inner.getElementsByClassName("btn");
+			var imgWidth=inner.offsetWidth;
+			
+			//动态生成轮播图
+			for(i=0;i<images.length;i++){
+				var liStr='<li><img src='+images[i].url+' alt='+images[i].name+
+				' height="300px" width="auto" /></li>'
+				ul.innerHTML+=liStr;
+				var olStr='<li>'+(i+1)+'</li>';
+				ol.innerHTML+=olStr;
+			}
+			ol.children[0].className="current";
+			nameSpan.innerHTML=images[0].name;
+			ul.style.width = imgWidth*(images.length+1)+"px";
+			//复制第一个li放在ul最后边
+			var ulNewLi = ul.children[0].cloneNode(true);
+			ul.appendChild(ulNewLi);
+			//设置计数器
+			var count = 0;
+			var num = 0;
+			//自动轮播图
+			var timer=setInterval(autoPlay,4900);
+			
+			//鼠标点击ol的li上切换图片
+			var olArr=ol.children;
+			for(i=0;i<olArr.length;i++){
+				//绑定索引值
+				olArr[i].index=i;
+				olArr[i].onclick=function(){
+					//排他思想
+					for(j=0;j<olArr.length;j++){
+						olArr[j].className="";
+					}
+					this.className="current";
+					nameSpan.innerHTML=images[this.index].name;
+					ul.style.left=(-this.index*imgWidth)+"px";
+					//记录当前图片和数字索引
+					count=num=this.index;
+				}
+			}
+			//鼠标放在图片上显示左右按钮，同时清除定时器
+			//移开鼠标隐藏按钮，设置定时器
+			box.onmouseover=function(){
+				btnLeftRight[0].style.display="block";
+				btnLeftRight[1].style.display="block";
+				clearInterval(timer);
+			}
+			box.onmouseout=function(){
+				btnLeftRight[0].style.display="none";
+				btnLeftRight[1].style.display="none";
+				timer=setInterval(autoPlay,4900);
+			}
+			//左右按钮切换图片
+			//向左
+			btnLeftRight[0].onclick=function() {
+				count--;
+				//计数器小于0时，将图片切换到最后一张，计数器设置为最后一张图片的索引值
+				if(count<0){
+					ul.style.left= -imgWidth*images.length+"px";
+					count=images.length-1;
+				}
+				animate_uniform(ul,-count*imgWidth,1);
+				num--;
+				//计数器小于0时，数字显示最后一个，点亮盒子，设置名称什么的。。。
+				if(num<0){
+					num=olArr.length-1;
+				}
+				for(j=0;j<olArr.length;j++){
+					olArr[j].className="";
+				}
+				olArr[num].className="current";
+				nameSpan.innerHTML=images[num].name;
+			}
+			//向右
+			btnLeftRight[1].onclick=function() {
+				autoPlay();
+			}
+			function autoPlay(){
+				count++;
+				//计数器大于最大值时，图片切换到第一张，计数器值设为1
+				if(count>images.length){
+					ul.style.left=0;
+					count=1;
+				}
+				animate_uniform(ul,-count*imgWidth,1);
+				
+				num++;
+				//计数器大于最大值时，数字显示1，计数器值设为0
+				if(num>images.length-1){
+					num=0;
+				}
+				for(j=0;j<olArr.length;j++){
+					olArr[j].className="";
+				}
+				olArr[num].className="current";
+				nameSpan.innerHTML=images[num].name;
+			}
+		</script>
+	</body>
+</html>
