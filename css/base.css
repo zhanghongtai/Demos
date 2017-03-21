@@ -6,7 +6,7 @@ a {
 	text-decoration: none;
 }
 ul,ol,li {
-	list-style-type: none;
+	list-style: none;
 }
 .clearfix:after {
 	content: "";
