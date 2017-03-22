@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
@@ -67,6 +67,7 @@
 				right: 30px;
 				cursor: pointer;
 				display: none;
+				z-index:999;
 			}
 			.fly {
 				position: absolute;
@@ -116,7 +117,7 @@
 		<div class="ad left">
 			<img src="../images/left.gif"/>
 		</div>
-		<img class="top" src="../images/Top.jpg"/>
+		<img class="top" src="../images/Top.png" width="60px" height="auto"/>
 		<img class="fly" src="../images/fly.gif"/>
 		
 	<script type="text/javascript" src="../js/tool.js" ></script>
@@ -225,8 +226,8 @@
 				var stepx=(targetx-leaderx)/10;
 				stepx=stepx>0?Math.ceil(stepx):Math.floor(stepx);
 				leaderx=leaderx+stepx;	
-				if(leaderx>(client().width+scroll().left-fly.offsetWidth)){
-					leaderx=client().width+scroll().left-fly.offsetWidth; 
+				if(leaderx>(client().width+scroll().left-fly.offsetWidth-20)){
+					leaderx=client().width+scroll().left-fly.offsetWidth-20; 
 				}
 				fly.style.left=leaderx+3+"px";
 				
