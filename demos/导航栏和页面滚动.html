@@ -225,12 +225,18 @@
 				var stepx=(targetx-leaderx)/10;
 				stepx=stepx>0?Math.ceil(stepx):Math.floor(stepx);
 				leaderx=leaderx+stepx;	
+				if(leaderx>(client().width+scroll().left-fly.offsetWidth)){
+					leaderx=client().width+scroll().left-fly.offsetWidth; 
+				}
 				fly.style.left=leaderx+3+"px";
 				
 				leadery=fly.offsetTop;
 				var stepy=(targety-leadery)/10;
 				stepy=stepy>0?Math.ceil(stepy):Math.floor(stepy);
 				leadery=leadery+stepy;
+				if(leadery>(client().height+scroll().top-fly.offsetHeight)){
+					leadery=client().height+scroll().top-fly.offsetHeight;
+				}
 				fly.style.top=leadery+3+"px";
 				
 				if(Math.abs(targetx-fly.offsetLeft)<=Math.abs(stepx) && Math.abs(targety-fly.offsetTop)<=Math.abs(stepy)){
