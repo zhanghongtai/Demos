@@ -68,6 +68,11 @@
 				cursor: pointer;
 				display: none;
 			}
+			.fly {
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
 		</style>
 	</head>
 	<body>
@@ -112,6 +117,7 @@
 			<img src="../images/left.gif"/>
 		</div>
 		<img class="top" src="../images/Top.jpg"/>
+		<img class="fly" src="../images/fly.gif"/>
 		
 	<script type="text/javascript" src="../js/tool.js" ></script>
 	<script>
@@ -123,6 +129,7 @@
 		//4：页面滚动盖住导航栏后导航栏固定在最上方
 		//5：左侧图片跟随滚动
 		//6：点击小火箭返回页面顶部
+		//7：图片跟随鼠标
 		
 		//动态生成导航栏
 		var header=document.getElementsByClassName("header")[0];
@@ -198,6 +205,41 @@
 			},25);
 		}
 		
+		//鼠标跟随
+		var fly=document.getElementsByClassName("fly")[0];
+		var targetx=0,targety=0;
+		var leaderx=0,leadery=0;
+		document.onmousemove=function(event){
+			event=event||window.event;
+			var pagex=event.pageX||scroll().left+event.clientX;
+			var pagey=event.pageY||scroll().top+event.clientY;
+			
+			targetx=pagex;
+			targety=pagey;
+			
+			clearInterval(timer)
+			var timer=setInterval(function(event){
+				event=event||window.event;
+				
+				leaderx=fly.offsetLeft;				
+				var stepx=(targetx-leaderx)/10;
+				stepx=stepx>0?Math.ceil(stepx):Math.floor(stepx);
+				leaderx=leaderx+stepx;	
+				fly.style.left=leaderx+3+"px";
+				
+				leadery=fly.offsetTop;
+				var stepy=(targety-leadery)/10;
+				stepy=stepy>0?Math.ceil(stepy):Math.floor(stepy);
+				leadery=leadery+stepy;
+				fly.style.top=leadery+3+"px";
+				
+				if(Math.abs(targetx-fly.offsetLeft)<=Math.abs(stepx) && Math.abs(targety-fly.offsetTop)<=Math.abs(stepy)){
+					fly.style.left=targetx;
+					fly.style.top=targety;
+					clearInterval(timer);
+				}
+			},30);			
+		}
 		
 	</script>
 	</body>
