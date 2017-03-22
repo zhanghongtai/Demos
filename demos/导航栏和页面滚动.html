@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>导航栏和页面滚动</title>
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<style>
+			.content {
+				background: url(../images/bgjn.png) no-repeat center;
+				width: 1000px;
+				height: 1575px;
+				margin: 0 auto;
+				overflow: hidden;
+				position: relative;
+			}
+			.content .header {
+				width: 1000px;
+				height: 100px;
+			}
+			.content .box {
+				width: 1000px;
+				height: 42px;
+				position: relative;
+				background: #fff url(../images/wifi.png) right center no-repeat;
+			}
+			.content .box ul {
+				position: relative;
+			}
+			.content .box ul li {
+				float: left;
+				height: 42px;
+				width: 95px;
+				text-align: center;
+				font: 700 16px/42px "simsun";
+				cursor: pointer;
+			}
+			.content .box span {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 83px;
+				height: 42px;
+				background: url(../images/cloud.gif) no-repeat;
+			}
+			.content .fixed {
+				position: fixed;
+				top: 0;
+			}
+			.content .main {
+				padding: 30px 100px;
+			}
+			.content .main p {
+				font: 500 16px/32px "simsun";
+			}
+			.ad {
+				position: absolute;
+				top: 170px;
+				width: 300px;
+				height: 350px;
+			}
+			.left {
+				left: 10px;
+			}
+			.top {
+				position: fixed;
+				bottom: 30px;
+				right: 30px;
+				cursor: pointer;
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="content">
+			<div class="header"></div>
+			<div class="box">
+				<span></span>
+				<ul></ul>
+			</div>
+			<div class="main">
+				<p>我怎么能够把你来比作夏天？</p>
+				<p>Shall I compare thee to a summer's day?</p>
+				<p>你不独比它可爱也比它温婉</p>
+				<p>Thou art more lovely and more temperate</p>
+				<p>狂风把五月宠爱的嫩蕊作践，</p>
+				<p>Rough winds do shake the darling buds of May,</p>
+				<p>夏天出凭的期限由未免太短</p>
+				<p>And summer's lease hath all too short a date</p>
+				<p>天上的眼睛有时照得太酷烈</p>
+				<p>Sometime too hot the eye of heaven shines,</p>
+				<p>它那炳耀的金颜又常遭掩蔽</p>
+				<p>And often is his gold complexion dimmed,</p>
+				<p>被机缘或无常的天道所摧折，</p>
+				<p>And every fair from fair sometime declines,</p>
+				<p>没有芳艳不终于凋残或销毁</p>
+				<p>By chance, or nature's changing course untrimmed</p>
+				<p>但是你的长夏永远不会凋落</p>
+				<p>But thy eternal summer shall not fade,</p>
+				<p>也不会损失你这皎洁的红芳</p>
+				<p>Nor lose possession of that fair thou ow'st,</p>
+				<p>或死神夸口你在他的影里漂泊</p>
+				<p>Nor shall death brag thou wander'st in his shade,</p>
+				<p>当你在不朽的诗里与时同长</p>
+				<p>When in eternal lines to time thou grow'st,</p>
+				<p>只要有人类，或人有眼睛，</p>
+				<p>So long as men can breathe, or eyes can see,</p>
+				<p>这诗将长存，并赐给你生命。
+				<p>So long lives this, and this gives life to thee.</p>
+			</div>
+		</div>
+		<div class="ad left">
+			<img src="../images/left.gif"/>
+		</div>
+		<img class="top" src="../images/Top.jpg"/>
+		
+	<script type="text/javascript" src="../js/tool.js" ></script>
+	<script>
+		var menus=["首页","HTML/CSS","JavaScript","jQuery","Bootstrap","Node.js","AJAX","JSON","Angular.js","React"];
+		//需求：
+		//1：动态生成导航栏
+		//2：鼠标放在li上span移动到鼠标位置，鼠标移开归位
+		//3：鼠标点击li后span移动到点击位置
+		//4：页面滚动盖住导航栏后导航栏固定在最上方
+		//5：左侧图片跟随滚动
+		//6：点击小火箭返回页面顶部
+		
+		//动态生成导航栏
+		var header=document.getElementsByClassName("header")[0];
+		var box=document.getElementsByClassName("box")[0];
+		var span=box.getElementsByTagName("span")[0];
+		var ul=box.getElementsByTagName("ul")[0];
+		var main=document.getElementsByClassName("main")[0];
+		var leftAd=document.getElementsByClassName("left")[0];
+		var img=document.getElementsByClassName("top")[0];
+		for(i=0;i<menus.length;i++){
+			var liStr="<li>"+menus[i]+"</li>";
+			ul.innerHTML+=liStr;
+		}
+		
+		//图片跟随效果
+		var liArr=ul.getElementsByTagName("li");
+		var liWidth=liArr[0].offsetWidth;
+		var count=0;
+		for(i=0;i<liArr.length;i++){
+			liArr[i].index=i;
+			liArr[i].onmouseover=function(){
+				animateSlowX(span,this.index*liWidth);
+			}
+			liArr[i].onmouseout=function(){
+				animateSlowX(span,count*liWidth);
+			}
+			liArr[i].onclick=function(){
+				count=this.index;
+				animateSlowX(span,this.index*liWidth);
+			}
+		}
+		
+		//固定导航栏
+		var hHeight=header.offsetHeight;
+		var bHeight=box.offsetHeight;
+		var mPaddingTop=30;
+		var cName=box.className;
+		window.onscroll=function(){
+			if(window.scroll().top>=hHeight){
+				box.className=cName+" fixed";
+				main.style.paddingTop=mPaddingTop+bHeight+"px";
+			}else{
+				box.className=cName;
+				main.style.paddingTop=mPaddingTop+"px";
+			}
+			//图片跟随滚动
+			var val=window.scroll().top;
+			animateSlowY(leftAd,val+170);
+			
+			//向下滚动超过300px显示小火箭
+			if(scroll().top>=300){
+				img.style.display="block";
+			}else{
+				img.style.display="none";
+			}
+			leader=scroll().top;
+		}
+		
+		//返回头部
+		var target=0;
+		var leader=0;
+		img.onclick=function(){
+			clearInterval(timer);
+			var timer=setInterval(function(){
+				var step=(target-leader)/10;
+				step=step>0?Math.ceil(step):Math.floor(step);
+				leader=leader+step;
+				window.scrollTo(0,leader);
+				if(Math.abs(target-leader)<=Math.abs(step)){
+					window.scrollTo(0,target);
+					clearInterval(timer);
+				}
+			},25);
+		}
+		
+		
+	</script>
+	</body>
+</html>
