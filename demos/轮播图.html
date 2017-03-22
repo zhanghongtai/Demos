@@ -174,7 +174,7 @@
 					ul.style.left= -imgWidth*images.length+"px";
 					count=images.length-1;
 				}
-				animate_uniform(ul,-count*imgWidth,1);
+				animateUniform(ul,-count*imgWidth,1);
 				num--;
 				//计数器小于0时，数字显示最后一个，点亮盒子，设置名称什么的。。。
 				if(num<0){
@@ -197,7 +197,7 @@
 					ul.style.left=0;
 					count=1;
 				}
-				animate_uniform(ul,-count*imgWidth,1);
+				animateUniform(ul,-count*imgWidth,1);
 				
 				num++;
 				//计数器大于最大值时，数字显示1，计数器值设为0
