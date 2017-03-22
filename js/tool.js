@@ -76,3 +76,13 @@ function scroll() {
     }
 }
 
+/**
+ * 检测浏览器的宽高
+ */
+function client(){
+	return {
+		"width":window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+		"height":window.innerHeight ||  document.documentElement.clientHeight || document.body.clientHeight
+	}
+}
+
