@@ -1,32 +1,12 @@
-/**
- * scrollTop和scrollLeft封装
- */
-function scroll() {  // 
-    if(window.pageYOffset != null) {  // ie9+ 高版本浏览器
-        // 因为 window.pageYOffset 默认的是  0  所以这里需要判断
-        return {
-            left: window.pageXOffset,
-            top: window.pageYOffset
-        }
-    }else if(document.compatMode === "CSS1Compat") {    // 标准浏览器   来判断有没有声明DTD
-        return {
-            left: document.documentElement.scrollLeft,
-            top: document.documentElement.scrollTop
-        }
-    }
-    return {   // 未声明 DTD
-        left: document.body.scrollLeft,
-        top: document.body.scrollTop
-    }
-}
 
 /**
+ * 匀速动画封装
  * 
  * @param {Object} obj  调用方法的对象
  * @param {Object} target  运动到的目的地
  * @param {Object} speed  运动的速度，单位为px/ms
  */
-function animate_uniform(obj,target,speed){
+function animateUniform(obj,target,speed){
 	//要用定时器，先清定时器
 	clearInterval(obj.timer);
 	
@@ -45,4 +25,54 @@ function animate_uniform(obj,target,speed){
 	},1);
 }
 
+
+/**
+ * 缓动动画封装（水平方向）
+ * @param {Object} obj  调用方法的对象
+ * @param {Object} target  目标位置
+ */
+function animateSlowX(obj,target){
+	clearInterval(obj.timer);
+	obj.timer=setInterval(function(){
+		var step = (target-obj.offsetLeft)/10;
+		//由于offsetLeft取值问题，步长大于0时向上取整，步长小于0时向下取整，使|步长|<1px时以1px前进
+		step = step>0 ? Math.ceil(step):Math.floor(step);
+		obj.style.left=obj.offsetLeft+step+"px";
+		if(Math.abs(target-obj.offsetLeft)<=Math.abs(step)){
+			obj.style.left=target+"px";
+			clearInterval(obj.timer);
+		}
+	},30);
+}
+
+
+/**
+ * 缓动动画封装（垂直方向）
+ * @param {Object} obj  调用方法的对象
+ * @param {Object} target  目标位置
+ */
+function animateSlowY(obj,target){
+	clearInterval(obj.timer);
+	obj.timer=setInterval(function(){
+		var step = (target-obj.offsetTop)/10;
+		//由于offsetLeft取值问题，步长大于0时向上取整，步长小于0时向下取整，使|步长|<1px时以1px前进
+		step = step>0 ? Math.ceil(step):Math.floor(step);
+		obj.style.top=obj.offsetTop+step+"px";
+		if(Math.abs(target-obj.offsetTop)<=Math.abs(step)){
+			obj.style.top=target+"px";
+			clearInterval(obj.timer);
+		}
+	},30);
+}
+
+
+/**
+ * scrollTop和scrollLeft封装
+ */
+function scroll() {  
+    return {
+        "top": window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop,
+        "left":  window.pageXOffset || document.body.scrollLeft || document.documentElement.scrollLeft
+    }
+}
 
