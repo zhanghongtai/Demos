@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>手风琴</title>
+		<link rel="stylesheet" href="../css/base.css" />
+		<style>
+			.box {
+				width: 1200px;
+				height: 400px;
+				margin: 50px auto;
+				border: 1px solid #CCCCCC;
+				overflow: hidden;
+			}
+			.box ul {
+				width: 1300px;
+			}
+			.box li {
+				width: 180px;
+				height: 400px;
+				float: left;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div class="box">
+			<ul>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+	
+	
+	<script>
+		var images=["../images/s07.jpg","../images/s01.jpg","../images/s05.jpg","../images/s03.jpg","../images/s04.jpg",
+		"../images/s02.jpg","../images/s06.jpg"];
+		var box=document.getElementsByClassName("box")[0];
+		var liArr=box.getElementsByTagName("li");
+		for(i=0;i<liArr.length;i++){
+			liArr[i].style.background="url("+images[i]+") no-repeat";
+			liArr[i].style.borderLeft="2px solid orange";
+			
+			liArr[i].onmouseover=function(){
+				for(j=0;j<liArr.length;j++){
+					animateSlow(liArr[j],{"width":100});
+				}
+				animateSlow(this,{"width":600});
+			}
+		}
+		box.onmouseout=function(){
+			for(j=0;j<liArr.length;j++){
+				animateSlow(liArr[j],{"width":180});
+			}
+		}
+		
+		
+	</script>
+	<script src="../js/tool.js" type="text/javascript" charset="utf-8"></script>	
+	</body>
+</html>

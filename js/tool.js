@@ -1,7 +1,6 @@
 
 /**
- * 匀速动画封装
- * 
+ * 匀速动画封装 
  * @param {Object} obj  调用方法的对象
  * @param {Object} target  运动到的目的地
  * @param {Object} speed  运动的速度，单位为px/ms
@@ -85,4 +84,70 @@ function client(){
 		"height":window.innerHeight ||  document.documentElement.clientHeight || document.body.clientHeight
 	}
 }
+
+
+/**
+ * 兼容方法获取元素样式
+ * @param {Object} obj
+ * @param {Object} attr
+ */
+function getStyle(obj,attr){
+    if(window.getComputedStyle){
+        return window.getComputedStyle(obj,null)[attr];
+    }
+    return ele.currentStyle[attr];
+}
+
+/**
+ * 缓动动画封装
+ * @param {Object} obj  调用函数的对象
+ * @param {Object} json  以json形式传入的参数，样式属性和属性值
+ * @param {Object} fn  回调函数
+ */
+function animateSlow(obj,json,fn){
+	clearInterval(obj.timer);
+	obj.timer=setInterval(function(){
+		var bool=true;
+		for(var k in json){
+			//获取当前属性值
+			var leader;
+			if(k === "opacity"){  //判断属性为opacity，是则*100
+                leader = getStyle(obj,k)*100 || 1;
+            }else{
+                leader = parseInt(getStyle(obj,k)) || 0;
+            }
+			//json[k]=target
+			var step=(json[k]-leader)/10;  
+			step=step>0?Math.ceil(step):Math.floor(step);
+			//当前值=当前值+步长
+			leader=leader+step;
+			//赋值
+			if(k==="opacity"){  //透明度
+				obj.style[k] = leader/100;
+				//兼容ie678
+				obj.style.filter = "alpha(opacity="+leader+")";
+			}else if(k==="zIndex"){  //层级，不需要缓动
+				obj.style.zIndex = json[k];
+			}else{
+				obj.style[k]=leader+"px";
+			}
+			
+			//当前值！==目标值，bool=false
+			if(json[k]!==leader){
+				bool=false;
+			}
+		}
+		//所有属性值都到达指定位置，清除定时器
+		if(bool){
+			clearInterval(obj.timer);
+			//所有程序执行完毕，执行回调函数
+			//判断是否传递了回调函数，是则执行
+			if(fn){
+				fn();
+			}
+		}
+	},25);
+}
+        
+        
 

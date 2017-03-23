@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>旋转轮播图</title>
+		<link rel="stylesheet" href="../css/base.css" />
+		<style>
+			.wrap {
+				width: 1200px;
+				margin: 10px auto;
+			}
+			.slide {
+				height: 500px;
+				position: relative;
+			}
+			.slide li {
+				position: absolute;
+				top: 0;
+				left: 200px;
+			}
+			.slide li img {
+				width: 100%;
+			}
+			.arrow {
+				opacity: 0;
+			}
+			.prev,.next {
+				width: 76px;
+				height: 112px;
+				position: absolute;
+				top: 50%;
+				margin-top: -56px;
+				background: url(../img/prev.png) no-repeat;
+				z-index: 99;
+			}
+			.next {
+				background-image: url(../img/next.png);
+				right: 0;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="wrap" id="wrap">
+			<div class="slide" id="slide">
+				<ul>
+					<li><a href="#"><img src="../images/x01.jpg" alt=""/></a></li>
+					<li><a href="#"><img src="../images/x02.jpg" alt=""/></a></li>
+					<li><a href="#"><img src="../images/x03.jpg" alt=""/></a></li>
+					<li><a href="#"><img src="../images/x04.jpg" alt=""/></a></li>
+					<li><a href="#"><img src="../images/x05.jpg" alt=""/></a></li>
+				</ul>
+				<div class="arrow" id="arrow">
+					<a href="javascript:;" class="prev" id="prev"></a>
+					<a href="javascript:;" class="next" id="next"></a>
+				</div>
+			</div>
+		</div>
+	
+	<script src="../js/tool.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		var arr = [
+	        {   //  1
+	            width:400,
+	            top:70,
+	            left:50,
+	            opacity:40,
+	            zIndex:2
+	        },
+	        {  // 2
+	            width:600,
+	            top:120,
+	            left:0,
+	            opacity:80,
+	            zIndex:3
+	        },
+	        {   // 3
+	            width:800,
+	            top:100,
+	            left:200,
+	            opacity:100,
+	            zIndex:4
+	        },
+	        {  // 4
+	            width:600,
+	            top:120,
+	            left:600,
+	            opacity:80,
+	            zIndex:3
+	        },
+	        {   //5
+	            width:400,
+	            top:70,
+	            left:750,
+	            opacity:40,
+	            zIndex:2
+	        }
+	    ];
+		var slide=document.getElementById("slide");
+		var arrow=document.getElementById("arrow");
+		var liArr=slide.getElementsByTagName("li");
+		var prev=document.getElementById("prev");
+		var next=document.getElementById("next");
+		
+		var flag=true;
+		//鼠标放在轮播图上，左右按钮显示，移开隐藏
+		slide.onmouseenter=function(){
+			animateSlow(arrow,{"opacity":100});
+		}
+		slide.onmouseleave=function(){
+			animateSlow(arrow,{"opacity":0});
+		}
+		move();
+		prev.onclick=function(){
+			if(flag){
+				flag=false;
+				move(true);
+			}
+		}
+		next.onclick=function(){
+			if(flag){
+				flag=false;
+				move(false);
+			}
+		}
+		
+		function move(bool){
+			if(bool === true || bool === false){
+				if(bool){
+					arr.unshift(arr.pop());
+				}else{
+					arr.push(arr.shift());
+				}
+			}
+			for(i=0;i<liArr.length;i++){
+				animateSlow(liArr[i],arr[i],function(){
+					flag=true;
+				});
+			}
+		}
+		
+	</script>
+	</body>
+</html>
