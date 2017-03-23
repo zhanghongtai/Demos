@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>放大镜</title>
+		<link rel="stylesheet" type="text/css" href="../css/base.css"/>
+		<style>
+			.box {
+				width: 200px;
+				height: 200px;
+				margin: 100px;
+				border: 1px solid #CCCCCC;
+				position: relative;
+			}
+			.big {
+				width: 300px;
+				height: 300px;
+				position: absolute;
+				top: 0;
+				border: 1px solid #CCCCCC;
+				overflow: hidden;
+				display: none;
+			}
+			.mask {
+				width: 100px;
+				height: 100px;
+				background: rgba(255, 255, 0, 0.4);
+				position: absolute;
+				top: 0;
+				left: 0;
+				cursor: move;
+				display: none;
+			}
+			.small {
+				position: relative;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box">
+			<div class="small">
+				<img src="../images/Top.png"/>
+				<div class="mask"></div>
+			</div>
+			<div class="big">
+				<img src="../images/Top.png"/>
+			</div>
+		</div>
+		<script>
+			var box=document.getElementsByClassName("box")[0];
+			var small=box.getElementsByClassName("small")[0];
+			var big=box.getElementsByClassName("big")[0];
+			var smallImg=small.getElementsByTagName("img")[0];
+			var bigImg=big.getElementsByTagName("img")[0];
+			var mask=small.getElementsByClassName("mask")[0];
+			//由于图片使用的是同一张图片，且图片大小不确定，所以根据盒子大小动态为图片设置宽高
+			smallImg.style.width=small.clientWidth+"px";
+			smallImg.style.height="auto";
+			//根据比例等比放大图片在大盒子中显示，比例=小盒子/放大镜盒子=大图片/大盒子
+			//放大镜盒子和大盒子初始为display=none的状态，无法获取宽高，比例值需要在显示放大镜盒子和大盒子只有进行赋值
+			bigImg.style.height="auto";
+			big.style.left=small.offsetWidth+10+"px";
+			//鼠标进入小盒子时显示放大镜盒子和大盒子
+			//onmouseover和onmouseout会产生冒泡，所有使用onmouseenter和onmouseleave
+			//onmouseenter==onmouseover+第一个不冒泡
+			//onmouseleave==onmouseout+第一个不冒泡
+			small.onmouseenter=function(){
+				mask.style.display="block";
+				big.style.display="block";
+				var proportionImg=small.offsetWidth/mask.offsetWidth;
+				bigImg.style.width=big.clientWidth*proportionImg+"px";
+			}
+			//鼠标离开小盒子时隐藏放大镜盒子和大盒子
+			small.onmouseleave=function(){
+				mask.style.display="none";
+				big.style.display="none";
+			}
+			//在小盒子中移动鼠标时，放大镜盒子跟随鼠标移动，同时大盒子内的图片等比移动，实现放大镜效果
+			small.onmousemove=function(event){
+				//获取事件
+				event=event||window.event;
+				//获取鼠标在事件发生时相对于整个文档的坐标
+				var pagex=event.pageX || scroll().left + event.clientX;
+				var pagey=event.pageY || scroll().top + event.clientY;
+				//获取放大镜盒子左上角相对于小盒子的坐标，为了让鼠标显示在放大镜盒子中心，需要分别减去放大镜盒子1/2的宽高
+				var x = pagex-box.offsetLeft - mask.offsetWidth/2;
+				var y = pagey-box.offsetTop - mask.offsetHeight/2;
+				//放大镜盒子不能超过小盒子的边界，对左上角x、y坐标进行限制
+				if(x<0){
+					x=0;
+				}
+				if(x>small.offsetWidth-mask.offsetWidth){
+					x=small.offsetWidth-mask.offsetWidth;
+				}
+				if(y<0){
+					y=0;
+				}
+				if(y>small.offsetHeight-mask.offsetHeight){
+					y=small.offsetHeight-mask.offsetHeight;
+				}
+				//赋值
+				mask.style.left=x+"px";
+				mask.style.top=y+"px";
+				//等比例移动大盒子中的图片，利用负数值的margin模拟移动效果
+				//比例=大盒子宽度/放大镜盒子宽度=大图片宽度/小盒子宽度
+				var proportionMove=bigImg.offsetWidth/smallImg.offsetWidth;
+				bigImg.style.marginTop = -y*proportionMove+"px";
+                bigImg.style.marginLeft = -x*proportionMove+"px";
+			}
+			
+			
+		</script>
+	<script src="../js/tool.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
